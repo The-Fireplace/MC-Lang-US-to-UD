@@ -15,6 +15,7 @@ fun main(args: Array<String>) {
     setupMap()
     val possibleInputs = listOf("en_GB.lang", "en_US.lang", "en_CA.lang", "en_NZ.lang", "en_AU.lang", "en_7S.lang")//list possible input lang files in order of preference.
     var loadedFile = false
+    var lowercaseOutput = false
     var inputFile = File("null")
     for(input in possibleInputs) {
         inputFile = File(input)
@@ -22,6 +23,18 @@ fun main(args: Array<String>) {
             loadedFile = true
             println("Language file found: "+input)
             break
+        }
+    }
+
+    if(!loadedFile){
+        for(input in possibleInputs) {
+            inputFile = File(input.toLowerCase())
+            if(inputFile.exists()){
+                loadedFile = true
+                lowercaseOutput = true
+                println("Language file found: "+input)
+                break
+            }
         }
     }
 
@@ -37,7 +50,11 @@ fun main(args: Array<String>) {
 
     fileInputStream.close()
 
-    val outputFile = File("en_UD.lang")
+    var outFileName = "en_UD.lang"
+    if(lowercaseOutput)
+        outFileName = outFileName.toLowerCase()
+
+    val outputFile = File(outFileName)
     val outputLines = mutableListOf<String>()
 
     for(line in lines){
@@ -101,5 +118,5 @@ fun main(args: Array<String>) {
         for(line in outputLines)
             out.println(line)
     }
-    println("en_UD.lang successfully created!")
+    println(outFileName+" successfully created!")
 }
