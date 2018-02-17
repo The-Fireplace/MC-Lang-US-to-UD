@@ -5,7 +5,7 @@ val regexDelimiter = "\\\\.|%([0-9]\\\$)?[A-z]|§([0-9]|[a-f]|[k-o]|r)".toRegex(
 
 fun setupMap() {
     val normal = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890!@#$%^&*()-_[]{};':\",.<>/?§+ "
-    val inverse = "∀ᙠↃ◖ƎℲ⅁HIſ⋊⅂WᴎOԀΌᴚS⊥∩ᴧMX⅄Zɐqɔpǝɟƃɥıɾʞʃɯuodbɹsʇnʌʍxʎz12Ɛᔭ59Ɫ860¡@#$%^⅋*)(-‾][}{؛,:„'˙></¿§+ "
+    val inverse = "ⱯᗺƆᗡƎℲ⅁HIՐʞꞀWNOԀΌᴚS⟘∩ᴧMX⅄Zɐqɔpǝɟᵷɥᴉɾʞꞁɯuodbɹsʇnʌʍxʎz⥝ᘔƐᔭ59Ɫ860¡@#$%^⅋*)(-‾][}{؛,:„'˙></¿§+ "
 
     for(char in normal)
         map.put(char, inverse[normal.indexOf(char)])
