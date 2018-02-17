@@ -22,6 +22,7 @@ fun main(args: Array<String>) {
     for(input in possibleInputs) {
         inputFile = File(input)
         if(inputFile.exists()){
+            //TODO: Check if filename is all lowercase here.
             loadedFile = true
             println("Language file found: "+input)
             break
