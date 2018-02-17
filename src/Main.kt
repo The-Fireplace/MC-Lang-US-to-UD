@@ -58,8 +58,11 @@ fun main(args: Array<String>) {
     val outputLines = mutableListOf<String>()
 
     for(line in lines){
-        if(!line.contains('='))
+        if(!line.contains('=')) {
+            if(line.isEmpty())
+                outputLines.add("")//Preserve empty lines
             continue//Skip empty or improperly formatted lines
+        }
         //Find and separate the identifier from the value
         val langIndex = line.indexOf('=')+1
         val ident = line.substring(0, langIndex)
