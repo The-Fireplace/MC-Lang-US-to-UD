@@ -115,25 +115,37 @@ fun main(args: Array<String>) {
         //Merge delimiters with non-delimiters
         val mergedList = mutableListOf<String>()
         if(!reversedDelimiters.isEmpty() && modLine.endsWith(reversedDelimiters[0])) {
-            var curIndex=0
-            for (element in reversedDelimiters) {
+            for ((curIndex, element) in reversedDelimiters.withIndex()) {
                 mergedList.add(element)
-                curIndex = reversedDelimiters.subList(curIndex, reversedDelimiters.lastIndex).indexOf(element)//Make sure to not get the same index if multiple of the same element are in the list
-                if(curIndex >= 0 && reversedRegexSplitValues.size > curIndex)
-                    mergedList.add(reversedRegexSplitValues[curIndex])
+                if(curIndex >= 0 && reversedRegexSplitValues.size > curIndex+1)
+                    mergedList.add(reversedRegexSplitValues[curIndex+1])
             }
         }else{
-            var curIndex=0
-            for (element in reversedRegexSplitValues) {
+            for ((curIndex, element) in reversedRegexSplitValues.withIndex()) {
                 mergedList.add(element)
-                curIndex = reversedRegexSplitValues.subList(curIndex, reversedRegexSplitValues.lastIndex).indexOf(element)//Make sure to not get the same index if multiple of the same element are in the list
                 if(curIndex >= 0 && reversedDelimiters.size > curIndex)
                     mergedList.add(reversedDelimiters[curIndex])
             }
         }
+        //Switch the color codes back
+        val recoloredMerged = mergedList
+        val colorDelimIndeces = mutableListOf<Int>()
+        for((index, delim) in mergedList.withIndex())
+            if(delim.startsWith("§") && delim.length == 2)
+                colorDelimIndeces.add(index)
+        if(colorDelimIndeces.size > 0){
+            if(!recoloredMerged[0].startsWith("§") || recoloredMerged[0].length != 2)
+                recoloredMerged.add(0, "§f")
+            val newColorDelimIndeces = mutableListOf(0)
+            newColorDelimIndeces.addAll(colorDelimIndeces)
+            newColorDelimIndeces.removeAt(newColorDelimIndeces.lastIndex)
+            for((indexI, index) in newColorDelimIndeces.withIndex())
+                recoloredMerged[index] = mergedList[colorDelimIndeces[indexI]]
+            recoloredMerged[colorDelimIndeces.last()] = "§f"
+        }
         //Create the reversed value to output
         var outModLine = ""
-        for(section in mergedList){
+        for(section in recoloredMerged){
             if(section.matches(regexDelimiter))
                 outModLine += section
             else{
@@ -215,9 +227,25 @@ fun main(args: Array<String>) {
                         mergedList.add(reversedDelimiters[curIndex])
                 }
             }
+            //Switch the color codes back
+            val recoloredMerged = mergedList
+            val colorDelimIndeces = mutableListOf<Int>()
+            for((index, delim) in mergedList.withIndex())
+                if(delim.startsWith("§") && delim.length == 2)
+                    colorDelimIndeces.add(index)
+            if(colorDelimIndeces.size > 0){
+                if(!recoloredMerged[0].startsWith("§") || recoloredMerged[0].length != 2)
+                    recoloredMerged.add(0, "§f")
+                val newColorDelimIndeces = mutableListOf(0)
+                newColorDelimIndeces.addAll(colorDelimIndeces)
+                newColorDelimIndeces.removeAt(newColorDelimIndeces.lastIndex)
+                for((indexI, index) in newColorDelimIndeces.withIndex())
+                    recoloredMerged[index] = mergedList[colorDelimIndeces[indexI]]
+                recoloredMerged[colorDelimIndeces.last()] = "§f"
+            }
             //Create the reversed value to output
             var outModLine = ""
-            for(section in mergedList){
+            for(section in recoloredMerged){
                 if(section.matches(regexDelimiter))
                     outModLine += section
                 else{
