@@ -96,9 +96,20 @@ fun main(args: Array<String>) {
         //Reverse the values
         val reversedRegexSplitValues = regexSplitValue.reversed()
         //Find the regex parts of the line by filtering out the non-regex parts
-        val delimiters = mutableListOf<String>()
+        var delimiters = mutableListOf<String>()
         for(result in regexDelimiter.findAll(modLine))
             delimiters.add(result.value)
+        //Fix duplicate regex values so they reverse order correctly
+        val modDelimiters = delimiters
+        for(delim in delimiters)
+            if(delim.startsWith("%") && delim.length == 2 && delimiters.indexOf(delim) != delimiters.lastIndexOf(delim)){
+                var delimIndex = 1
+                for((totalIndex, modDelim) in delimiters.withIndex()) {
+                    if (modDelim == delim)
+                        modDelimiters[totalIndex] = modDelim[0] + Integer.toString(delimIndex++) + '$' + modDelim[1]
+                }
+            }
+        delimiters = modDelimiters
         //Reverse the regex values
         val reversedDelimiters = delimiters.reversed()
         //Merge delimiters with non-delimiters
@@ -169,9 +180,20 @@ fun main(args: Array<String>) {
             //Reverse the values
             val reversedRegexSplitValues = regexSplitValue.reversed()
             //Find the regex parts of the line by filtering out the non-regex parts
-            val delimiters = mutableListOf<String>()
+            var delimiters = mutableListOf<String>()
             for(result in regexDelimiter.findAll(modLine))
                 delimiters.add(result.value)
+            //Fix duplicate regex values so they reverse order correctly
+            val modDelimiters = delimiters
+            for(delim in delimiters)
+                if(delim.startsWith("%") && delim.length == 2 && delimiters.indexOf(delim) != delimiters.lastIndexOf(delim)){
+                    var delimIndex = 1
+                    for((totalIndex, modDelim) in delimiters.withIndex()) {
+                        if (modDelim == delim)
+                            modDelimiters[totalIndex] = modDelim[0] + Integer.toString(delimIndex++) + '$' + modDelim[1]
+                    }
+                }
+            delimiters = modDelimiters
             //Reverse the regex values
             val reversedDelimiters = delimiters.reversed()
             //Merge delimiters with non-delimiters
