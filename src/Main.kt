@@ -128,7 +128,8 @@ fun main(args: Array<String>) {
             }
         }
         //Switch the color codes back
-        val recoloredMerged = mergedList
+        val recoloredMerged = mutableListOf<String>()
+        recoloredMerged.addAll(mergedList)
         val colorDelimIndeces = mutableListOf<Int>()
         for((index, delim) in mergedList.withIndex())
             if(delim.startsWith("§") && delim.length == 2)
@@ -136,12 +137,12 @@ fun main(args: Array<String>) {
         if(colorDelimIndeces.size > 0){
             if(!recoloredMerged[0].startsWith("§") || recoloredMerged[0].length != 2)
                 recoloredMerged.add(0, "§f")
-            val newColorDelimIndeces = mutableListOf(0)
+            val newColorDelimIndeces = mutableListOf(-1)
             newColorDelimIndeces.addAll(colorDelimIndeces)
             newColorDelimIndeces.removeAt(newColorDelimIndeces.lastIndex)
             for((indexI, index) in newColorDelimIndeces.withIndex())
-                recoloredMerged[index] = mergedList[colorDelimIndeces[indexI]]
-            recoloredMerged[colorDelimIndeces.last()] = "§f"
+                recoloredMerged[index+1] = mergedList[colorDelimIndeces[indexI]]
+            recoloredMerged[colorDelimIndeces.last()+1] = "§f"
         }
         //Create the reversed value to output
         var outModLine = ""
@@ -228,7 +229,8 @@ fun main(args: Array<String>) {
                 }
             }
             //Switch the color codes back
-            val recoloredMerged = mergedList
+            val recoloredMerged = mutableListOf<String>()
+            recoloredMerged.addAll(mergedList)
             val colorDelimIndeces = mutableListOf<Int>()
             for((index, delim) in mergedList.withIndex())
                 if(delim.startsWith("§") && delim.length == 2)
@@ -236,12 +238,12 @@ fun main(args: Array<String>) {
             if(colorDelimIndeces.size > 0){
                 if(!recoloredMerged[0].startsWith("§") || recoloredMerged[0].length != 2)
                     recoloredMerged.add(0, "§f")
-                val newColorDelimIndeces = mutableListOf(0)
+                val newColorDelimIndeces = mutableListOf(-1)
                 newColorDelimIndeces.addAll(colorDelimIndeces)
                 newColorDelimIndeces.removeAt(newColorDelimIndeces.lastIndex)
                 for((indexI, index) in newColorDelimIndeces.withIndex())
-                    recoloredMerged[index] = mergedList[colorDelimIndeces[indexI]]
-                recoloredMerged[colorDelimIndeces.last()] = "§f"
+                    recoloredMerged[index+1] = mergedList[colorDelimIndeces[indexI]]
+                recoloredMerged[colorDelimIndeces.last()+1] = "§f"
             }
             //Create the reversed value to output
             var outModLine = ""
