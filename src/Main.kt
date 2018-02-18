@@ -83,7 +83,7 @@ fun main(args: Array<String>) {
 
     for(line in lines){
         if(!line.contains('=')) {
-            if(line.isEmpty())
+            if(line.isBlank())
                 outputLines.add("")//Preserve empty lines
             continue//Skip empty or improperly formatted lines
         }
@@ -176,12 +176,14 @@ fun main(args: Array<String>) {
 
         outputLines.add("")//Add a newline to separate the two sections
 
+        var prevLine = ""
         for(line in lines2){
             if(!line.contains('=')) {
-                if(line.isEmpty())
+                if(line.isBlank() && !prevLine.isBlank())
                     outputLines.add("")//Preserve empty lines
                 continue//Skip empty or improperly formatted lines
             }
+            prevLine = line
             //Find and separate the identifier from the value
             val langIndex = line.indexOf('=')+1
             val ident = line.substring(0, langIndex)
