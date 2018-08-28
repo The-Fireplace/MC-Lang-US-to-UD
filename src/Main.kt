@@ -24,7 +24,7 @@ fun main(args: Array<String>) {
         if(inputFile.exists()){
             //TODO: Check if filename is all lowercase here.
             loadedFile = true
-            println("Language file found: "+input)
+            println("Language file found: $input")
             break
         }
     }
@@ -35,7 +35,7 @@ fun main(args: Array<String>) {
             if(inputFile.exists()){
                 loadedFile = true
                 lowercaseOutput = true
-                println("Language file found: "+input)
+                println("Language file found: $input")
                 break
             }
         }
@@ -51,7 +51,7 @@ fun main(args: Array<String>) {
             secondaryInputFile = File(input)
             if(secondaryInputFile.exists() && secondaryInputFile != inputFile){
                 loadedSecondary = true
-                println("Secondary language file found: "+input)
+                println("Secondary language file found: $input")
                 break
             }
         }
@@ -60,7 +60,7 @@ fun main(args: Array<String>) {
             secondaryInputFile = File(input.toLowerCase())
             if(secondaryInputFile.exists() && secondaryInputFile != inputFile){
                 loadedSecondary = true
-                println("Secondary language file found: "+input)
+                println("Secondary language file found: $input")
                 break
             }
         }
@@ -155,7 +155,7 @@ fun main(args: Array<String>) {
                     outSection += if(map.containsKey(char))
                         map.get(char)
                     else{
-                        println("Error: Character not in map: "+char)
+                        println("Error: Character not in map: $char")
                         char
                     }
                 outModLine += outSection
@@ -258,7 +258,7 @@ fun main(args: Array<String>) {
                         outSection += if(map.containsKey(char))
                             map.get(char)
                         else{
-                            println("Error: Character not in map: "+char)
+                            println("Error: Character not in map: $char")
                             char
                         }
                     outModLine += outSection
@@ -274,5 +274,5 @@ fun main(args: Array<String>) {
         for(line in outputLines)
             out.println(line)
     }
-    println(outFileName+" successfully created!")
+    println("$outFileName successfully created!")
 }
