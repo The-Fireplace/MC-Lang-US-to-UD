@@ -8,7 +8,7 @@ fun setupMap() {
     val inverse = "ⱯᗺƆᗡƎℲ⅁HIՐʞꞀWNOԀΌᴚS⟘∩ᴧMX⅄Zɐqɔpǝɟᵷɥᴉɾʞꞁɯuodbɹsʇnʌʍxʎz⥝ᘔƐᔭ59Ɫ860¡@#$%^⅋*)(-‾][}{؛,:„'˙></¿§+| "
 
     for(char in normal)
-        map.put(char, inverse[normal.indexOf(char)])
+        map[char] = inverse[normal.indexOf(char)]
 }
 
 fun main(args: Array<String>) {
@@ -153,7 +153,7 @@ fun main(args: Array<String>) {
                 var outSection=""
                 for(char in section.reversed())
                     outSection += if(map.containsKey(char))
-                        map.get(char)
+                        map[char]
                     else{
                         println("Error: Character not in map: $char")
                         char
@@ -256,7 +256,7 @@ fun main(args: Array<String>) {
                     var outSection=""
                     for(char in section.reversed())
                         outSection += if(map.containsKey(char))
-                            map.get(char)
+                            map[char]
                         else{
                             println("Error: Character not in map: $char")
                             char
