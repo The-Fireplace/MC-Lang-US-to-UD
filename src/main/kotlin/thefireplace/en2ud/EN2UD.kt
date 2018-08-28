@@ -1,3 +1,5 @@
+package thefireplace.en2ud
+
 import java.io.File
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -8,7 +10,7 @@ import org.gradle.api.DefaultTask
 
 class EN2UD: Plugin<Project>{
     override fun apply(p0: Project?) {
-        p0?.task("en2ud")
+        p0?.tasks?.create("en2ud")
     }
 }
 
@@ -54,7 +56,7 @@ class EN2UDtask : DefaultTask() {
         }
         //Check for english language files
         for ((i, input) in possibleInputs.withIndex()) {
-            inputFiles[i] = File(langDirectory+if(lowercaseOutput) input.toLowerCase() else input)
+            inputFiles[i] = File(langDirectory +if(lowercaseOutput) input.toLowerCase() else input)
             if (inputFiles[i].exists()) {
                 loadedFiles[i] = true
                 loadedSomething = true
@@ -71,7 +73,7 @@ class EN2UDtask : DefaultTask() {
         if (lowercaseOutput)
             outFileName = outFileName.toLowerCase()
 
-        val outputFile = File(langDirectory+outFileName)
+        val outputFile = File(langDirectory +outFileName)
         val outputLines = mutableListOf<String>()
         val usedIdents = mutableListOf<String>()
 

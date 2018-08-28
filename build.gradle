@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = '1.2.21'
+    ext.kotlin_version = '1.2.61'
     repositories {
 		mavenCentral()
     }
@@ -7,24 +7,53 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
+plugins {
+    id "com.gradle.plugin-publish" version "0.10.0"
+    id 'java-gradle-plugin'
+}
 
 apply plugin: "kotlin"
 
 sourceCompatibility = 1.8
 
-description = 'A program to convert english lang files into en_UD lang files.'
+description = 'A program to convert Minecraft mods\' english lang files into en_UD lang files.'
 version = '1.0'
+group = "thefireplace.en2ud"
 
 repositories {
     mavenCentral()
+    jcenter()
 }
 
 dependencies {
+    compileOnly gradleApi()
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    compile gradleApi()
 }
 
-sourceSets {
+gradlePlugin {
+    plugins {
+        en2ud {
+            id = 'thefireplace.en2ud'
+            implementationClass = 'thefireplace.en2ud.EN2UD'
+        }
+    }
+}
+
+pluginBundle {
+    website = 'https://github.com/The-Fireplace/MC-en-UD-Generator'
+    vcsUrl = 'https://github.com/The-Fireplace/MC-en-UD-Generator'
+    description = 'A program to convert Minecraft mods\' english lang files into en_UD lang files.'
+    tags = ['minecraft', 'localization']
+
+    plugins {
+        en2ud {
+            // id is captured from java-gradle-plugin configuration
+            displayName = 'English to en_UD.lang'
+        }
+    }
+}
+
+/*sourceSets {
     main.java.srcDirs += 'src/'
     main.kotlin.srcDirs += 'src/'
 }
@@ -37,4 +66,4 @@ jar {
     }
 	
 	from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-}
+}*/
