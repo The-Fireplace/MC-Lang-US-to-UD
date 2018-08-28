@@ -10,7 +10,7 @@ import org.gradle.api.DefaultTask
 
 class EN2UD: Plugin<Project>{
     override fun apply(p0: Project?) {
-        p0?.tasks?.create("en2ud")
+        p0?.tasks?.create("en2ud", EN2UDtask::class.java)
     }
 }
 
