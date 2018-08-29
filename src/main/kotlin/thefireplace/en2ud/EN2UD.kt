@@ -4,23 +4,28 @@ import java.io.File
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.tasks.TaskAction
-import org.gradle.api.DefaultTask
+import org.gradle.api.internal.AbstractTask
 
 
-
-class EN2UD: Plugin<Project>{
+open class EN2UD: Plugin<Project>{
     override fun apply(p0: Project?) {
         p0?.tasks?.create("en2ud", EN2UDtask::class.java)
+        p0?.extensions?.add("en2ud", EN2UDextension())
     }
 }
 
-class EN2UDtask : DefaultTask() {
+class EN2UDextension {
+    var modid = ""
+}
+
+open class EN2UDtask : AbstractTask() {
     companion object {
         //TODO: Add support for more types of color codes, custom formatting stuff, etc
         private val regexDelimiter = "\\\\.|%([0-9]\\\$)?[A-z]|§([0-9]|[a-f]|[k-o]|r)".toRegex()
         private val possibleInputs = arrayOf("en_GB.lang", "en_US.lang", "en_CA.lang", "en_NZ.lang", "en_AU.lang", "en_7S.lang")
         private const val mcmetaDirectory = "/src/main/resources/pack.mcmeta"
-        private const val langDirectory = "/src/main/resources/assets/lang/"
+        private const val assetsDirectory = "/src/main/resources/assets/"
+        private var langDirectory = ""
 
         private val map = LinkedHashMap<Char, Char>()
 
@@ -36,6 +41,12 @@ class EN2UDtask : DefaultTask() {
     @TaskAction
     fun en2ud() {
         setupMap()
+        //Get the lang directory
+        val extension = extensions.getByName("en2ud")
+        val ext: EN2UDextension? = extension as? EN2UDextension
+        if(ext?.modid == null || ext.modid == "")
+            error("No modid found!")
+        langDirectory = assetsDirectory + ext.modid + "/lang/"
         //list possible input lang files in order of preference.
         var loadedSomething = false
         val loadedFiles = arrayOf(false, false, false, false, false, false, false)
@@ -56,24 +67,22 @@ class EN2UDtask : DefaultTask() {
         }
         //Check for english language files
         for ((i, input) in possibleInputs.withIndex()) {
-            inputFiles[i] = File(langDirectory +if(lowercaseOutput) input.toLowerCase() else input)
+            inputFiles[i] = File(langDirectory + if (lowercaseOutput) input.toLowerCase() else input)
             if (inputFiles[i].exists()) {
                 loadedFiles[i] = true
                 loadedSomething = true
-                println("Language file found: "+input[i])
+                println("Language file found: " + input[i])
             }
         }
 
-        if (!loadedSomething) {
-            println("Unable to find a valid language file!")
-            return
-        }
+        if (!loadedSomething)
+            error("Unable to find an English language file!")
 
         var outFileName = "en_UD.lang"
         if (lowercaseOutput)
             outFileName = outFileName.toLowerCase()
 
-        val outputFile = File(langDirectory +outFileName)
+        val outputFile = File(langDirectory + outFileName)
         val outputLines = mutableListOf<String>()
         val usedIdents = mutableListOf<String>()
 
@@ -162,7 +171,7 @@ class EN2UDtask : DefaultTask() {
                             outSection += if (map.containsKey(char))
                                 map[char]
                             else {
-                                println("Error: Character not in map: $char")
+                                println("Warning: Character not in map: $char")
                                 char
                             }
                         outModLine += outSection
