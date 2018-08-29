@@ -20,12 +20,15 @@ open class EN2UD: Plugin<Project>{
 
 open class EN2UDextension {
     var modid = ""
+    var customRegex = ""
+    var copyInvalidLines = false
+    var debug = false
 }
 
 open class EN2UDtask : AbstractTask() {
     companion object {
         //TODO: Add support for more types of color codes, custom formatting stuff, etc
-        private val regexDelimiter = "\\\\.|%([0-9]\\\$)?[A-z]|§([0-9]|[a-f]|[k-o]|r)".toRegex()
+        private var regexDelimiter = "\\\\.|%([0-9]\\\$)?[A-z]|§([0-9]|[a-f]|[k-o]|r)".toRegex()
         private val possibleInputs = arrayOf("en_GB.lang", "en_US.lang", "en_CA.lang", "en_NZ.lang", "en_AU.lang", "en_7S.lang")
         private const val mcmetaDirectory = "src/main/resources/pack.mcmeta"
         private const val assetsDirectory = "src/main/resources/assets/"
@@ -34,8 +37,8 @@ open class EN2UDtask : AbstractTask() {
         private val map = LinkedHashMap<Char, Char>()
 
         private fun setupMap() {
-            val normal = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890!@#$%^&*()-_[]{};':\",.<>/?§+| "
-            val inverse = "ⱯᗺƆᗡƎℲ⅁HIՐʞꞀWNOԀΌᴚS⟘∩ᴧMX⅄Zɐqɔpǝɟᵷɥᴉɾʞꞁɯuodbɹsʇnʌʍxʎz⥝ᘔƐᔭ59Ɫ860¡@#$%^⅋*)(-‾][}{؛,:„'˙></¿§+| "
+            val normal = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890!@#$%^&*()-_[]{};':\",.<>/?§+|= "
+            val inverse = "ⱯᗺƆᗡƎℲ⅁HIՐʞꞀWNOԀΌᴚS⟘∩ᴧMX⅄Zɐqɔpǝɟᵷɥᴉɾʞꞁɯuodbɹsʇnʌʍxʎz⥝ᘔƐᔭ59Ɫ860¡@#$%^⅋*)(-‾][}{؛,:„'˙></¿§+|= "
 
             for((index, char) in normal.withIndex())
                 map[char] = inverse[index]
@@ -49,13 +52,20 @@ open class EN2UDtask : AbstractTask() {
         val ext: EN2UDextension? = EN2UD.ext
         if(ext?.modid == null || ext.modid == "")
             error("No modid found!")
+        //Put together the lang directory
         langDirectory = assetsDirectory + ext.modid + "/lang/"
-        println("Will search for lang files at $langDirectory")
-        //list possible input lang files in order of preference.
+        //Check if the user has set custom regex, and if so, make this check for it
+        if(ext.customRegex.isNotEmpty())
+            regexDelimiter = "($regexDelimiter|${ext.customRegex})".toRegex()
+        //If at least one lang file has been loaded
         var loadedSomething = false
+        //Which lang files have been loaded
         val loadedFiles = arrayOf(false, false, false, false, false, false, false)
+        //The array of lang files
         val inputFiles = arrayOf(File("null"), File("null"), File("null"), File("null"), File("null"), File("null"), File("null"))
+        //If the output filename should be lowercase (Used for mods using resource pack format 3)
         var lowercaseOutput = false
+        //Check if pack.mcmeta exists and the format is 3
         val mcmetaFile = File(mcmetaDirectory)
         if(mcmetaFile.exists()) {
             val metaInputStream = mcmetaFile.inputStream()
@@ -73,9 +83,13 @@ open class EN2UDtask : AbstractTask() {
         for ((i, input) in possibleInputs.withIndex()) {
             val filePath = langDirectory + if (lowercaseOutput) input.toLowerCase() else input
             inputFiles[i] = File(filePath)
+            if(ext.debug)
+                println("Searching for lang file: $filePath")
             if (inputFiles[i].exists()) {
                 loadedFiles[i] = true
                 loadedSomething = true
+                if(ext.debug)
+                    println("Lang file found!")
             }
         }
 
@@ -87,11 +101,14 @@ open class EN2UDtask : AbstractTask() {
             outFileName = outFileName.toLowerCase()
 
         val outputFile = File(langDirectory + outFileName)
+        //The lines to be added to the output file
         val outputLines = mutableListOf<String>()
+        //The identifiers that have already been processed. Used to prevent duplicates from different localizations
         val usedIdents = mutableListOf<String>()
 
+        //Process all the input files
         for((i, inputFile) in inputFiles.withIndex()) {
-            //Return if that file was not loaded
+            //Return if that file was not found
             if(!loadedFiles[i])
                 continue
             val fileInputStream = inputFile.inputStream()
@@ -102,9 +119,12 @@ open class EN2UDtask : AbstractTask() {
             fileInputStream.close()
 
             for (line in lines) {
+                //Check if the line should not be translated
                 if (!line.contains('=')) {
                     if (line.isBlank())
                         outputLines.add("")//Preserve empty lines
+                    else if (ext.copyInvalidLines)
+                        outputLines.add(line)//Add the invalid line to the new file
                     continue//Skip improperly formatted lines
                 }
                 //Find and separate the identifier from the value
