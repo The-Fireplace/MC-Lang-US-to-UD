@@ -16,8 +16,8 @@ apply plugin: "kotlin"
 
 sourceCompatibility = 1.8
 
-description = 'A program to convert Minecraft mods\' english lang files into en_UD lang files.'
-version = '0.9'
+description = 'A gradle plugin to convert Minecraft mods\' english lang files into en_UD lang files.'
+version = '1.0'
 group = "thefireplace.en2ud"
 
 repositories {
@@ -42,7 +42,7 @@ gradlePlugin {
 pluginBundle {
     website = 'https://github.com/The-Fireplace/MC-en-UD-Generator'
     vcsUrl = 'https://github.com/The-Fireplace/MC-en-UD-Generator'
-    description = 'A (Very WIP) program to convert Minecraft mods\' english lang files into en_UD lang files.'
+    description = 'A plugin to convert Minecraft mods\' english lang files into en_UD lang files.'
     tags = ['minecraft', 'localization']
 
     plugins {
@@ -52,18 +52,3 @@ pluginBundle {
         }
     }
 }
-
-/*sourceSets {
-    main.java.srcDirs += 'src/'
-    main.kotlin.srcDirs += 'src/'
-}
-
-jar {
-    manifest {
-        attributes(
-                'Main-Class': 'MainKt'
-        )
-    }
-	
-	from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-}*/
