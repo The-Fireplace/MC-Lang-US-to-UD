@@ -8,9 +8,9 @@ import org.gradle.api.internal.AbstractTask
 
 
 open class EN2UD: Plugin<Project>{
-    override fun apply(p0: Project?) {
+    override fun apply(p0: Project) {
         p0?.tasks?.create("en2ud", EN2UDtask::class.java)
-        p0?.extensions?.add("en2ud", EN2UDextension())
+        p0?.extensions?.create("en2ud", EN2UDextension::class.java)
     }
 }
 
