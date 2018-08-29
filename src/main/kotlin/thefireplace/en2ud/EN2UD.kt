@@ -70,7 +70,9 @@ open class EN2UDtask : AbstractTask() {
         }
         //Check for english language files
         for ((i, input) in possibleInputs.withIndex()) {
-            inputFiles[i] = File(langDirectory + if (lowercaseOutput) input.toLowerCase() else input)
+            val filePath = langDirectory + if (lowercaseOutput) input.toLowerCase() else input
+            inputFiles[i] = File(filePath)
+            println("Searching for a lang file at $filePath")
             if (inputFiles[i].exists()) {
                 loadedFiles[i] = true
                 loadedSomething = true
