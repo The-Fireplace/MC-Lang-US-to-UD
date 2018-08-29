@@ -50,6 +50,7 @@ open class EN2UDtask : AbstractTask() {
         if(ext?.modid == null || ext.modid == "")
             error("No modid found!")
         langDirectory = assetsDirectory + ext.modid + "/lang/"
+        println("Will search for lang files at $langDirectory")
         //list possible input lang files in order of preference.
         var loadedSomething = false
         val loadedFiles = arrayOf(false, false, false, false, false, false, false)
@@ -72,11 +73,9 @@ open class EN2UDtask : AbstractTask() {
         for ((i, input) in possibleInputs.withIndex()) {
             val filePath = langDirectory + if (lowercaseOutput) input.toLowerCase() else input
             inputFiles[i] = File(filePath)
-            println("Searching for a lang file at $filePath")
             if (inputFiles[i].exists()) {
                 loadedFiles[i] = true
                 loadedSomething = true
-                println("Language file found: " + input[i])
             }
         }
 
