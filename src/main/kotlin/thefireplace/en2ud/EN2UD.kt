@@ -27,8 +27,8 @@ open class EN2UDtask : AbstractTask() {
         //TODO: Add support for more types of color codes, custom formatting stuff, etc
         private val regexDelimiter = "\\\\.|%([0-9]\\\$)?[A-z]|§([0-9]|[a-f]|[k-o]|r)".toRegex()
         private val possibleInputs = arrayOf("en_GB.lang", "en_US.lang", "en_CA.lang", "en_NZ.lang", "en_AU.lang", "en_7S.lang")
-        private const val mcmetaDirectory = "/src/main/resources/pack.mcmeta"
-        private const val assetsDirectory = "/src/main/resources/assets/"
+        private const val mcmetaDirectory = "src/main/resources/pack.mcmeta"
+        private const val assetsDirectory = "src/main/resources/assets/"
         private var langDirectory = ""
 
         private val map = LinkedHashMap<Char, Char>()
