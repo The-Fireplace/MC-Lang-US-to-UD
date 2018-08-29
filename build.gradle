@@ -17,7 +17,7 @@ apply plugin: "kotlin"
 sourceCompatibility = 1.8
 
 description = 'A program to convert Minecraft mods\' english lang files into en_UD lang files.'
-version = '0.4'
+version = '0.6'
 group = "thefireplace.en2ud"
 
 repositories {
