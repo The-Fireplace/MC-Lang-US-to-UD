@@ -8,9 +8,13 @@ import org.gradle.api.internal.AbstractTask
 
 
 open class EN2UD: Plugin<Project>{
+    companion object{
+        var ext:EN2UDextension? = null
+    }
     override fun apply(p0: Project) {
         p0.tasks?.create("en2ud", EN2UDtask::class.java)
-        p0.extensions?.create("en2ud_ext", EN2UDextension::class.java)
+        ext = EN2UDextension()
+        p0.extensions?.add("en2ud", ext)
     }
 }
 
@@ -42,8 +46,7 @@ open class EN2UDtask : AbstractTask() {
     fun en2ud() {
         setupMap()
         //Get the lang directory
-        val extension = extensions.getByName("en2ud_ext")
-        val ext: EN2UDextension? = extension as? EN2UDextension
+        val ext: EN2UDextension? = EN2UD.ext
         if(ext?.modid == null || ext.modid == "")
             error("No modid found!")
         langDirectory = assetsDirectory + ext.modid + "/lang/"
