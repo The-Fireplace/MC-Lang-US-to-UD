@@ -2,7 +2,7 @@ To add this to your gradle project:
 Between `buildscript{...}` and `apply plugin: 'net.minecraftforge.gradle.forge'`, insert the following:
 
 `plugins{
-    id "thefireplace.en2ud" version "1.0"
+    id "thefireplace.en2ud" version "1.0.1"
 }`
 
 Anywhere after the plugins are applied, add the following:
