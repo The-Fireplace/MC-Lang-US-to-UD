@@ -2,7 +2,7 @@ To add this to your gradle project:
 Between `buildscript{...}` and `apply plugin: 'net.minecraftforge.gradle.forge'`, insert the following:
 
 `plugins{
-    id "thefireplace.en2ud" version "1.0.4"
+    id "thefireplace.en2ud" version "1.0.2"
 }`
 
 Anywhere after the plugins are applied, add the following:
@@ -23,4 +23,5 @@ To run the script, run `gradlew en2ud`
  
 And that's all there is to it! The output from running it will let you know if anything went wrong.
  
-This supports vanilla color codes (§1, §f, etc) and variables inserted with %s, %d, etc.
+This supports ~~vanilla color codes (§1, §f, etc) and~~ variables inserted with %s, %d, etc.
+Vanilla color code support is borked at the moment. Working on a fix.
