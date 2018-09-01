@@ -196,8 +196,8 @@ open class EN2UDtask : AbstractTask() {
                     //Rotate the colors around so the text is colored as intended
                     for ((delimIndex, index) in newColorDelimIndices.withIndex()) {
                         if(ext.debugColors)
-                            println("Setting Recolored Merged at index " + (colorDelimIndices[index] + offset) + " to " + mergedList[colorDelimIndices[delimIndex]])
-                        recoloredMerged[colorDelimIndices[index] + offset] = mergedList[colorDelimIndices[delimIndex]]
+                            println("Setting Recolored Merged at index " + (colorDelimIndices[index] + offset) + " to " + mergedList[if(delimIndex >= 0) colorDelimIndices[delimIndex] else colorDelimIndices.last()])
+                        recoloredMerged[colorDelimIndices[index] + offset] = mergedList[if(delimIndex >= 0) colorDelimIndices[delimIndex] else colorDelimIndices.last()]
                     }
                     //recoloredMerged[colorDelimIndices.last() + 1] = "§f"
                     if(ext.debugColors)
