@@ -56,7 +56,7 @@ open class EN2UDtask : AbstractTask() {
         //Check if the user has set custom regex, and if so, make this check for it
         if(ext.customRegex.isNotEmpty())
             regexDelimiter = "($regexDelimiter|${ext.customRegex})".toRegex()
-        //If at least one lang file has been loaded
+        //If at least one lang file has been found
         var loadedSomething = false
         //Which lang files have been loaded
         val loadedFiles = arrayOf(false, false, false, false, false, false, false)
@@ -153,13 +153,15 @@ open class EN2UDtask : AbstractTask() {
                 val reversedDelimiters = delimiters.reversed()
                 //Merge delimiters with non-delimiters
                 val mergedList = mutableListOf<String>()
-                if (!reversedDelimiters.isEmpty() && modLine.endsWith(reversedDelimiters[0])) {
+                if (!reversedDelimiters.isEmpty() && modLine.endsWith(reversedDelimiters[0])) {//if the line we are translating ends with a delimiter
+                    //Add a delimiter first
                     for ((curIndex, element) in reversedDelimiters.withIndex()) {
                         mergedList.add(element)
                         if (curIndex >= 0 && reversedRegexSplitValues.size > curIndex + 1)
                             mergedList.add(reversedRegexSplitValues[curIndex + 1])
                     }
-                } else {
+                } else {//The line we are translating does not end with a delimiter
+                    //Add a non-delimiter first
                     for ((curIndex, element) in reversedRegexSplitValues.withIndex()) {
                         mergedList.add(element)
                         if (curIndex >= 0 && reversedDelimiters.size > curIndex)
@@ -169,19 +171,19 @@ open class EN2UDtask : AbstractTask() {
                 //Switch the color codes back
                 val recoloredMerged = mutableListOf<String>()
                 recoloredMerged.addAll(mergedList)
-                val colorDelimIndeces = mutableListOf<Int>()
+                val colorDelimIndices = mutableListOf<Int>()
                 for ((index, delim) in mergedList.withIndex())
                     if (delim.startsWith("§") && delim.length == 2)
-                        colorDelimIndeces.add(index)
-                if (colorDelimIndeces.size > 0) {
+                        colorDelimIndices.add(index)
+                if (colorDelimIndices.size > 0) {
                     if (!recoloredMerged[0].startsWith("§") || recoloredMerged[0].length != 2)
                         recoloredMerged.add(0, "§f")
                     val newColorDelimIndeces = mutableListOf(-1)
-                    newColorDelimIndeces.addAll(colorDelimIndeces)
+                    newColorDelimIndeces.addAll(colorDelimIndices)
                     newColorDelimIndeces.removeAt(newColorDelimIndeces.lastIndex)
-                    for ((indexI, index) in newColorDelimIndeces.withIndex())
-                        recoloredMerged[index + 1] = mergedList[colorDelimIndeces[indexI]]
-                    recoloredMerged[colorDelimIndeces.last() + 1] = "§f"
+                    for ((delimIndex, index) in newColorDelimIndeces.withIndex())
+                        recoloredMerged[index + 1] = mergedList[colorDelimIndices[delimIndex]]
+                    recoloredMerged[colorDelimIndices.last() + 1] = "§f"
                 }
                 //Create the reversed value to output
                 var outModLine = ""
