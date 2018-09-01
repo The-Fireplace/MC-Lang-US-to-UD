@@ -176,14 +176,18 @@ open class EN2UDtask : AbstractTask() {
                     if (delim.startsWith("§") && delim.length == 2)
                         colorDelimIndices.add(index)
                 if (colorDelimIndices.size > 0) {
-                    if (!recoloredMerged[0].startsWith("§") || recoloredMerged[0].length != 2)
+                    var offset = 0
+                    if (!recoloredMerged[0].startsWith("§") || recoloredMerged[0].length != 2) {
                         recoloredMerged.add(0, "§f")
+                        offset++
+                    }
                     val newColorDelimIndeces = mutableListOf(-1)
                     newColorDelimIndeces.addAll(colorDelimIndices)
                     newColorDelimIndeces.removeAt(newColorDelimIndeces.lastIndex)
+                    //Rotate the colors around so the text is colored as intended
                     for ((delimIndex, index) in newColorDelimIndeces.withIndex())
-                        recoloredMerged[index + 1] = mergedList[colorDelimIndices[delimIndex]]
-                    recoloredMerged[colorDelimIndices.last() + 1] = "§f"
+                        recoloredMerged[colorDelimIndices[index] + offset] = mergedList[colorDelimIndices[delimIndex]]
+                    //recoloredMerged[colorDelimIndices.last() + 1] = "§f"
                 }
                 //Create the reversed value to output
                 var outModLine = ""
