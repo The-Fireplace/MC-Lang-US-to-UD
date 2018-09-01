@@ -23,6 +23,7 @@ open class EN2UDextension {
     var customRegex = ""
     var copyInvalidLines = false
     var debug = false
+    var debugColors = false
 }
 
 open class EN2UDtask : AbstractTask() {
@@ -171,23 +172,36 @@ open class EN2UDtask : AbstractTask() {
                 //Switch the color codes back
                 val recoloredMerged = mutableListOf<String>()
                 recoloredMerged.addAll(mergedList)
+                if(ext.debugColors)
+                    println("Merged List: $mergedList")
                 val colorDelimIndices = mutableListOf<Int>()
                 for ((index, delim) in mergedList.withIndex())
                     if (delim.startsWith("§") && delim.length == 2)
                         colorDelimIndices.add(index)
+                if(ext.debugColors)
+                    println("Color Delimiter Indices: $colorDelimIndices")
                 if (colorDelimIndices.size > 0) {
                     var offset = 0
                     if (!recoloredMerged[0].startsWith("§") || recoloredMerged[0].length != 2) {
                         recoloredMerged.add(0, "§f")
                         offset++
                     }
-                    val newColorDelimIndeces = mutableListOf(-1)
-                    newColorDelimIndeces.addAll(colorDelimIndices)
-                    newColorDelimIndeces.removeAt(newColorDelimIndeces.lastIndex)
+                    if(ext.debugColors)
+                        println("Initial Recolored Merged List: $recoloredMerged")
+                    val newColorDelimIndices = mutableListOf(-1)
+                    newColorDelimIndices.addAll(colorDelimIndices)
+                    newColorDelimIndices.removeAt(newColorDelimIndices.lastIndex)
+                    if(ext.debugColors)
+                        println("New Color Delimiter Indices: $newColorDelimIndices")
                     //Rotate the colors around so the text is colored as intended
-                    for ((delimIndex, index) in newColorDelimIndeces.withIndex())
+                    for ((delimIndex, index) in newColorDelimIndices.withIndex()) {
+                        if(ext.debugColors)
+                            println("Setting Recolored Merged at index " + (colorDelimIndices[index] + offset) + " to " + mergedList[colorDelimIndices[delimIndex]])
                         recoloredMerged[colorDelimIndices[index] + offset] = mergedList[colorDelimIndices[delimIndex]]
+                    }
                     //recoloredMerged[colorDelimIndices.last() + 1] = "§f"
+                    if(ext.debugColors)
+                        println("Final Recolored Merged List: $recoloredMerged")
                 }
                 //Create the reversed value to output
                 var outModLine = ""
